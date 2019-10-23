@@ -47,13 +47,13 @@ def call(body) {
                 steps {
                     sh './gradlew test'
                     }
-                }
-                post {
-                    success {
-                        junit '**/service/target/surefire-reports/*.xml'
-                    }
+                    post {
+                        success {
+                            junit '**/service/target/surefire-reports/*.xml'
+                        }
                 }
             }
+            
 
             stage('Package') {
                 steps {
