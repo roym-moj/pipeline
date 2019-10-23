@@ -39,7 +39,7 @@ def call(body) {
             
             stage('Checkstyle') {
                 steps {
-                    sh 'mvn -f service/pom.xml checkstyle:check --settings ./settings/maven.xml'
+                    sh './gradlew checkstyleMain'
                 }
             }
 
