@@ -54,40 +54,59 @@ def call(body) {
             }
             
 
-            stage('Package') {
-                steps {
-                    sh './gradlew bootJar'
-                    sh "docker build -f Dockerfile -t ${env.JOB_NAME} ."
-                    sh "docker tag ${env.JOB_NAME}:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/demo:${env.JOB_NAME}"
-                }
-            }
-            
-            stage('Publish') {
-                steps {
-                    //  THIS SHOULD ALL BE IN THE CODE AS A LOGIN METHOD
-                    sh 'loginvar=$(aws ecr get-login --no-include-email --region us-west-2) && eval "$loginvar"'
-                    //This should not be done, instead seperate repos
-                    sh "aws ecr batch-delete-image --repository-name demo --image-ids imageTag=${env.JOB_NAME} --region us-west-2"
-                    
-                    sh "docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/demo:${env.JOB_NAME}"
-                }
-            }
+//            stage('Package') {
+//                steps {
+//                    sh './gradlew bootJar'
+//                    sh "docker build -f Dockerfile -t ${env.JOB_NAME} ."
+//                    sh "docker tag ${env.JOB_NAME}:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/demo:${env.JOB_NAME}"
+//                }
+//            }
+//            
+//            stage('Publish') {
+//                steps {
+//                    //  THIS SHOULD ALL BE IN THE CODE AS A LOGIN METHOD
+//                    sh 'loginvar=$(aws ecr get-login --no-include-email --region us-west-2) && eval "$loginvar"'
+//                    //This should not be done, instead seperate repos
+//                    sh "aws ecr batch-delete-image --repository-name demo --image-ids imageTag=${env.JOB_NAME} --region us-west-2"
+//                    
+//                    sh "docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/demo:${env.JOB_NAME}"
+//                }
+//            }
             
             stage('Create Cluster') {
                 steps {
-                    sh "aws ecs create-cluster --cluster-name ${env.JOB_NAME} --region us-west-2"
-                    
-                
+                    //config
+                    sh "ecs-cli configure --region us-west-2 --cluster ${env.JOB_NAME} --default-launch-type FARGATE --config-name ${env.JOB_NAME} --force"
+                    //create cluster
+                    sh "ecs-cli up --capability-iam --size 1 --instance-type t2.small --launch-type EC2 --cluster-config ${env.JOB_NAME} --force --region us-west-2"
                 }
             }
-
-            //deploy all services
-            //   DockerName.getNameAndTag(branchName, serviceName, subscription, version, isMasterRelease, this)
-
-            //run system/global tests
-            //(sleep here)
             
-            //destroy enviroment
+            stage('Deploy services') {
+                steps {
+                    //deploy docker images -- MANIFEST. (TODO in proper code)
+                    sh 'aws ecs register-task-definition --network-mode host --family demo-app-1 --region us-west-2 --container-definitions "[{\"name\":\"demo-app-1\",\"image\":\"651524873607.dkr.ecr.us-west-2.amazonaws.com/demo:demo-app-1\",\"cpu\":256,\"memory\":512,\"essential\":true}]"'
+                    sh 'aws ecs run-task --cluster appnamehere --task-definition demo-app-1 --count 1  --region us-west-2'
+                    sh 'aws ecs register-task-definition --network-mode host --family demo-app-2 --region us-west-2 --container-definitions "[{\"name\":\"demo-app-2\",\"image\":\"651524873607.dkr.ecr.us-west-2.amazonaws.com/demo:demo-app-2\",\"cpu\":256,\"memory\":512,\"essential\":true}]"'
+                    sh 'aws ecs run-task --cluster appnamehere --task-definition demo-app-2 --count 1  --region us-west-2'
+                }
+            }
+//config
+//ecs-cli configure --region us-west-2 --cluster appnamehere --default-launch-type FARGATE --config-name appnamehere --force
+//create cluster
+//ecs-cli up --capability-iam --size 1 --instance-type t2.small --launch-type EC2 --cluster-config appnamehere --force --region us-west-2
+//deploy docker images -- loop. (TODO in proper code)
+//aws ecs register-task-definition --network-mode host --family appnamehere --region us-west-2 --container-definitions "[{\"name\":\"appnamehere\",\"image\":\"651524873607.dkr.ecr.us-west-2.amazonaws.com/demo:demo-app-1\",\"cpu\":256,\"memory\":512,\"essential\":true}]"
+//run it -- MEM LIMIT
+//aws ecs run-task --cluster appnamehere --task-definition appnamehere --count 1  --region us-west-2
+
+//Manual destruction --REMEMBER
+
+//Jenkins dropdown job
+
+//deploy all services -- should be done with manifest
+//move code to common so can demo drop down
+//   DockerName.getNameAndTag(branchName, serviceName, subscription, version, isMasterRelease, this)
 
             
         }
