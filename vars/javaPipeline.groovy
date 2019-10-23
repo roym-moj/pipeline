@@ -58,6 +58,7 @@ def call(body) {
                 steps {
                     sh './gradlew bootJar'
                     sh "docker build -f Dockerfile -t ${env.JOB_NAME} ."
+                    sh "docker tag ${env.JOB_NAME}:latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-2.amazonaws.com/demo:latest"
                 }
             }
             
@@ -65,7 +66,7 @@ def call(body) {
                 steps {
                     //  THIS SHOULD ALL BE IN THE CODE AS A LOGIN METHOD
                     sh 'loginvar=$(aws ecr get-login --no-include-email --region us-east-2) && eval "$loginvar"'
-                    sh "docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-2.amazonaws.com/${env.JOB_NAME}"
+                    sh "docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-2.amazonaws.com/demo:latest"
                 }
             }
             
