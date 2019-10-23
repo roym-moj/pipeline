@@ -66,6 +66,9 @@ def call(body) {
                 steps {
                     //  THIS SHOULD ALL BE IN THE CODE AS A LOGIN METHOD
                     sh 'loginvar=$(aws ecr get-login --no-include-email --region us-west-2) && eval "$loginvar"'
+                    //This should not be done, instead seperate repos
+                    sh "aws ecr batch-delete-image --repository-name demo --image-ids imageTag=${env.JOB_NAME} --region us-west-2"
+                    
                     sh "docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/demo:${env.JOB_NAME}"
                 }
             }
