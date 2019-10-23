@@ -73,22 +73,21 @@ def call(body) {
                 }
             }
             
-//            stage('Create Enviroment -- beanstalk?') {
-//                steps {
-//                    DockerName.getNameAndTag(branchName, serviceName, subscription, version, isMasterRelease, this)
+            stage('Create Cluster') {
+                steps {
+                    sh "aws ecs create-cluster --cluster-name ${env.JOB_NAME} --region us-west-2"
+                    
+                
+                }
+            }
 
-//                }
-//            }
-//
-//            stage('System Tests') {
-//                steps {
-//                }
-//            }
-//
-//            stage('Destroy Enviroment -- beanstalk?') {
-//                steps {
-//                }
-//            }
+            //deploy all services
+            //   DockerName.getNameAndTag(branchName, serviceName, subscription, version, isMasterRelease, this)
+
+            //run system/global tests
+            //(sleep here)
+            
+            //destroy enviroment
 
             
         }
