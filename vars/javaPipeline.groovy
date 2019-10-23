@@ -57,7 +57,7 @@ def call(body) {
             stage('Package') {
                 steps {
                     sh './gradlew bootJar'
-                    sh "docker build -f Dockerfile -t ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-2.amazonaws.com/demo:${env.JOB_NAME} ."
+                    sh "docker build -f Dockerfile -t ${env.JOB_NAME} ."
                 }
             }
             
