@@ -32,7 +32,7 @@ def call(body) {
         stages {
             stage('Compile') {
                 steps {
-                    sh './gradlew compile'
+                    sh './gradlew compileJava'
                 }
             }
 
