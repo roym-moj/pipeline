@@ -49,7 +49,7 @@ def call(body) {
                     }
                     post {
                         success {
-                            junit '**/service/target/surefire-reports/*.xml'
+                            junit '**/build/reports/reports.js'
                         }
                 }
             }
