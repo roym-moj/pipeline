@@ -49,7 +49,7 @@ def call(body) {
                     }
                     post {
                         success {
-                            junit '**/build/reports/reports.js'
+                            junit 'build/test-results/test/TEST-hello.HelloControllerIT.xml'
                         }
                 }
             }
