@@ -12,8 +12,7 @@ def call(body) {
     pipeline {
         agent any
         environment {
-            SERVICE_NAME = "$pipelineParams.SERVICE_NAME"
-            SONARQUBE_PROJECT_NAME = "$pipelineParams.SONARQUBE_PROJECT_NAME"
+            AWS_ACCOUNT_ID = credentials('accountid')
         }
         options {
             ansiColor('xterm')
@@ -37,11 +36,11 @@ def call(body) {
             }
 
             
-            stage('Checkstyle') {
-                steps {
-                    sh './gradlew checkstyleMain'
-                }
-            }
+//            stage('Checkstyle') {
+//                steps {
+//                    sh './gradlew checkstyleMain'
+//                }
+//            }
 
             stage('Unit Test') {
                 steps {
@@ -57,13 +56,23 @@ def call(body) {
 
             stage('Package') {
                 steps {
-                    sh './gradlew jar'
-                    }
+                    sh './gradlew bootJar'
+                    sh "docker build -f Dockerfile -t ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-2.amazonaws.com/demo:${env.JOB_NAME} ."
+                }
             }
             
+            stage('Publish') {
+                steps {
+                    //  THIS SHOULD ALL BE IN THE CODE AS A LOGIN METHOD
+                    sh 'loginvar=$(aws ecr get-login --no-include-email --region us-east-2) && eval "$loginvar"'
+                    sh "docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-2.amazonaws.com/${env.JOB_NAME}"
+                }
+            }
             
 //            stage('Create Enviroment -- beanstalk?') {
 //                steps {
+//                    DockerName.getNameAndTag(branchName, serviceName, subscription, version, isMasterRelease, this)
+
 //                }
 //            }
 //
