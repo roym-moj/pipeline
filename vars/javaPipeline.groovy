@@ -62,17 +62,17 @@ def call(body) {
                 }
             }
             
-            stage('Publish') {
-                steps {
-                    //  THIS SHOULD ALL BE IN THE CODE AS A LOGIN METHOD
-                    sh 'loginvar=$(aws ecr get-login --no-include-email --region us-west-2) && eval "$loginvar"'
-                    //This should not be done, instead seperate repos
-                    sh "aws ecr batch-delete-image --repository-name demo --image-ids imageTag=${env.JOB_NAME} --region us-west-2"
-                    
-                    sh "docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/demo:${env.JOB_NAME}"
-                }
-            }
-            
+//            stage('Publish') {
+//                steps {
+//                    //  THIS SHOULD ALL BE IN THE CODE AS A LOGIN METHOD
+//                    sh 'loginvar=$(aws ecr get-login --no-include-email --region us-west-2) && eval "$loginvar"'
+//                    //This should not be done, instead seperate repos
+//                    sh "aws ecr batch-delete-image --repository-name demo --image-ids imageTag=${env.JOB_NAME} --region us-west-2"
+//                    
+//                    sh "docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/demo:${env.JOB_NAME}"
+//                }
+//            }
+//            
 //            stage('Create Cluster') {
 //                steps {
 //                    //config
@@ -85,7 +85,7 @@ def call(body) {
             stage('Deploy services') {
                 steps {
                     //deploy docker images -- MANIFEST. (TODO in proper code)
-                    sh "aws ecs register-task-definition --network-mode host --family demoapp1 --region us-west-2 --container-definitions \"[{\"name\":\"demoapp1\",\"image\":\"651524873607.dkr.ecr.us-west-2.amazonaws.com/demo:demoapp1\",\"cpu\":256,\"memory\":512,\"essential\":true}]\""
+                    sh 'aws ecs register-task-definition --network-mode host --family demoapp1 --region us-west-2 --container-definitions "[{\\"name\\":\\"demoapp1\\",\\"image\\":\\"651524873607.dkr.ecr.us-west-2.amazonaws.com/demo:demoapp1\\",\\"cpu\\":256,\\"memory\\":512,\\"essential\\":true}]"'
 //                    sh 'aws ecs run-task --cluster appnamehere --task-definition demoapp1 --count 1  --region us-west-2'
 //                    sh 'aws ecs register-task-definition --network-mode host --family demoapp2 --region us-west-2 --container-definitions "[{\"name\":\"demoapp2\",\"image\":\"651524873607.dkr.ecr.us-west-2.amazonaws.com/demo:demoapp2\",\"cpu\":256,\"memory\":512,\"essential\":true}]"'
 //                    sh 'aws ecs run-task --cluster appnamehere --task-definition demoapp2 --count 1  --region us-west-2'
