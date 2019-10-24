@@ -37,7 +37,10 @@ def call(body) {
 
             stage('Checkstyle') {
                 steps {
-                    sh './gradlew checkstyleMain'
+                    //OPTIONAL - FAILURE
+                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        sh './gradlew checkstyleMain'
+                    }
                 }
             }
 
