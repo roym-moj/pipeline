@@ -95,9 +95,9 @@ def call(body) {
                     //EnviromentActions.populateEnviroment(env.JOB_NAME, this)
                     //EnviromentActions.deploySpecificService(env.JOB_NAME, this)
                     
-                    sh 'aws ecs register-task-definition --network-mode host --family demoapp1 --region us-west-2 --container-definitions "[{\\"name\\":\\"demoapp1\\",\\"image\\":\\"651524873607.dkr.ecr.us-west-2.amazonaws.com/demo:demoapp1\\",\\"cpu\\":256,\\"memory\\":512,\\"essential\\":true}]"'
+                    sh 'aws ecs register-task-definition --network-mode host --family demoapp1 --region us-west-2 --container-definitions "[{\\"name\\":\\"demoapp1\\",\\"image\\":\\"651524873607.dkr.ecr.us-west-2.amazonaws.com/demo:demoapp1\\",\\"cpu\\":120,\\"memory\\":120,\\"essential\\":true}]"'
                     sh "aws ecs run-task --cluster ${env.JOB_NAME} --task-definition demoapp1 --count 1  --region us-west-2"
-                    sh 'aws ecs register-task-definition --network-mode host --family demoapp2 --region us-west-2 --container-definitions "[{\\"name\\":\\"demoapp2\\",\\"image\\":\\"651524873607.dkr.ecr.us-west-2.amazonaws.com/demo:demoapp2\\",\\"cpu\\":256,\\"memory\\":512,\\"essential\\":true}]"'
+                    sh 'aws ecs register-task-definition --network-mode host --family demoapp2 --region us-west-2 --container-definitions "[{\\"name\\":\\"demoapp2\\",\\"image\\":\\"651524873607.dkr.ecr.us-west-2.amazonaws.com/demo:demoapp2\\",\\"cpu\\":120,\\"memory\\":120,\\"essential\\":true}]"'
                     sh "aws ecs run-task --cluster ${env.JOB_NAME} --task-definition demoapp2 --count 1  --region us-west-2"
                 }
             }        
