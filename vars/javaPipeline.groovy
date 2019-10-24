@@ -36,22 +36,22 @@ def call(body) {
             }
 
             
-            stage('Checkstyle') {
-                steps {
-                    sh './gradlew checkstyleMain'
-                }
-            }
-
-            stage('Unit Test') {
-                steps {
-                    sh './gradlew test'
-                    }
-                    post {
-                        success {
-                            junit 'build/test-results/test/TEST-hello.HelloControllerIT.xml'
-                        }
-                }
-            }
+//            stage('Checkstyle') {
+//                steps {
+//                    sh './gradlew checkstyleMain'
+//                }
+//            }
+//
+//            stage('Unit Test') {
+//                steps {
+//                    sh './gradlew test'
+//                    }
+//                    post {
+//                        success {
+//                            junit 'build/test-results/test/TEST-hello.HelloControllerIT.xml'
+//                        }
+//                }
+//            }
             
 
             stage('Package') {
