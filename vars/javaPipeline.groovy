@@ -81,10 +81,10 @@ def call(body) {
                       //EnviromentActions.createEmptyEnviroment(env.JOB_NAME, this)
                     //OR                    
                       //EnviromentActions.createEmptyEnviroment(env.JOB_NAME, this)
-                    
-                    sh "/usr/local/bin/ecs-cli configure --region us-west-2 --cluster probationbuilds --default-launch-type FARGATE --config-name probationbuilds"
-                    sh "/usr/local/bin/ecs-cli up --capability-iam --size 2 --instance-type t3.micro --launch-type EC2 --cluster-config probationbuilds --region us-west-2"
-                    sleep(60)
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        sh "/usr/local/bin/ecs-cli up --capability-iam --size 1 --instance-type t3.micro --launch-type EC2 --cluster-config probationbuilds --region us-west-2"
+                        sleep(60)
+                    }
                 }
             }
             
@@ -94,7 +94,7 @@ def call(body) {
                     //Should use a manifest (embedded json file) and below methods
                     //EnviromentActions.populateEnviroment(env.JOB_NAME, this)
                     //EnviromentActions.deploySpecificService(env.JOB_NAME, this)
-                    sh "aws ecs register-task-definition --network-mode host --family ${env.JOB_NAME}" + ' --region us-west-2 --container-definitions "[{\\"name\\":\\"demoapp1\\",\\"image\\":\\"651524873607.dkr.ecr.us-west-2.amazonaws.com/demo:demoapp1\\",\\"cpu\\":120,\\"memory\\":120,\\"essential\\":true}, {\\"name\\":\\"demoapp2\\",\\"image\\":\\"651524873607.dkr.ecr.us-west-2.amazonaws.com/demo:demoapp2\\",\\"cpu\\":120,\\"memory\\":120,\\"essential\\":true}]"'
+                    sh "aws ecs register-task-definition --network-mode none --family ${env.JOB_NAME}" + ' --region us-west-2 --container-definitions "[{\\"name\\":\\"demoapp1\\",\\"image\\":\\"651524873607.dkr.ecr.us-west-2.amazonaws.com/demo:demoapp1\\",\\"cpu\\":120,\\"memory\\":120,\\"essential\\":true}, {\\"name\\":\\"demoapp2\\",\\"image\\":\\"651524873607.dkr.ecr.us-west-2.amazonaws.com/demo:demoapp2\\",\\"cpu\\":120,\\"memory\\":120,\\"essential\\":true}]"'
                     sh "aws ecs run-task --cluster probationbuilds --task-definition ${env.JOB_NAME} --count 1  --region us-west-2"
                 }
             }        
