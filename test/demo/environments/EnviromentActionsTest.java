@@ -2,7 +2,7 @@ package demo.environments;
 
 import org.junit.Test
         
-public class EnviromentActionsTest {
+class EnviromentActionsTest {
     
     @Test
     public void createEmptyEnviromentDoesSomething() {

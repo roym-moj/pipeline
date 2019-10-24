@@ -1,4 +1,6 @@
-package AwsActionsTest
+package demo.enviroments
+
+import org.junit.Test
 
 class groovy {
 
