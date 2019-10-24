@@ -73,14 +73,14 @@ def call(body) {
                 }
             }
             
-            stage('Create Cluster') {
-                steps {
-                    //config
-     //               sh "/usr/local/bin/ecs-cli configure --region us-west-2 --cluster ${env.JOB_NAME} --default-launch-type FARGATE --config-name ${env.JOB_NAME}"
-                    //create cluster
-     //               sh "/usr/local/bin/ecs-cli up --capability-iam --size 1 --instance-type t2.small --launch-type EC2 --cluster-config ${env.JOB_NAME} --force --region us-west-2"
-                }
-            }
+//            stage('Create Cluster') {
+//                steps {
+//                    //config
+//                    sh "/usr/local/bin/ecs-cli configure --region us-west-2 --cluster ${env.JOB_NAME} --default-launch-type FARGATE --config-name ${env.JOB_NAME}"
+//                    //create cluster
+//                    sh "/usr/local/bin/ecs-cli up --capability-iam --size 1 --instance-type t2.small --launch-type EC2 --cluster-config ${env.JOB_NAME} --force --region us-west-2"
+//                }
+//            }
             
             stage('Deploy services') {
                 steps {
