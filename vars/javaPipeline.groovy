@@ -79,7 +79,7 @@ def call(body) {
                 steps {
                     
                       //EnviromentActions.createEmptyEnviroment(env.JOB_NAME, this)
-                    OR                    
+                    //OR                    
                       //EnviromentActions.createEmptyEnviroment(env.JOB_NAME, this)
                     
                     sh "/usr/local/bin/ecs-cli configure --region us-west-2 --cluster ${env.JOB_NAME} --default-launch-type FARGATE --config-name ${env.JOB_NAME}"
