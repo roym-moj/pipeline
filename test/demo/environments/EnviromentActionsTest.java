@@ -1,4 +1,4 @@
-package demo.environments;
+package demo.environments
 
 import org.junit.Test
         
