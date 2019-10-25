@@ -86,14 +86,13 @@ def call(body) {
                     //OR                    
                     //EnviromentActions.createEmptyEnviroment(env.JOB_NAME, this)
                     sh "/usr/local/bin/ecs-cli up --capability-iam --size 1 --instance-type t3.medium --launch-type EC2 --cluster-config probationbuilds --region us-west-2 --force"
-                    sleep(60)
                 }
 
             }
             
             stage('Deploy/Update services') {
                 steps {
-                    
+                    sleep(60)
                     //Should use a manifest (embedded json file) and below methods
                     //EnviromentActions.populateEnviroment(env.JOB_NAME, this)
                     //EnviromentActions.deploySpecificService(env.JOB_NAME, this)
