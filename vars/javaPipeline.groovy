@@ -35,14 +35,14 @@ def call(body) {
                 }
             }
 
-//            stage('Checkstyle') {
-//                steps {
-//                    //OPTIONAL - FAILURE
-//                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-//                        sh './gradlew checkstyleMain'
-//                    }
-//                }
-//            }
+            stage('Checkstyle') {
+                steps {
+                    //OPTIONAL - FAILURE
+                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        sh './gradlew checkstyleMain'
+                    }
+                }
+            }
 
             stage('Unit Test') {
                 steps {
